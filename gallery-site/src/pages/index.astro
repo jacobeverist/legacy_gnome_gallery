@@ -3,15 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '../data/collections';
 ---
 
-<BaseLayout title="Legacy Gnome Gallery">
+<BaseLayout title="Legacy Encoder Visualizations">
   <div class="page-wrapper">
 
     <!-- Hero -->
     <section class="hero">
-      <h1>Legacy Gnome Gallery</h1>
+      <h1>Legacy Encoder Visualizations</h1>
       <p class="hero-subtitle">
-        Rendered output from legacy visualization research — grid encodings,
-        hypergrid experiments, hexagonal subspaces, and similarity metrics.
+        Encoder parameter evaluation, 2D hypergrid experiments, hexagonal grid cells, and similarity heatmaps and curves.
       </p>
       <div class="hero-divider"></div>
     </section>
@@ -185,8 +184,8 @@ import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '..
   /* ─── Collections Grid ─────────────────────────────────────────────────────── */
   .collections-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
   }
 
   .collection-card {
@@ -234,20 +233,20 @@ import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '..
   }
 
   .card-body {
-    padding: 1rem 1.25rem 1.25rem;
+    padding: 1.1rem 1.4rem 1.4rem;
   }
 
   .card-title {
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
     line-height: 1.35;
   }
 
   .card-meta {
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -256,8 +255,8 @@ import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '..
   /* ─── Standalone Images + Animations Grid ──────────────────────────────────── */
   .images-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
   }
 
   .image-card {
@@ -282,9 +281,11 @@ import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '..
   }
 
   .image-caption {
-    padding: 0.6rem 0.875rem 0.75rem;
-    font-size: 0.75rem;
-    color: var(--text-muted);
+    padding: 1.1rem 1.4rem 1.4rem;
+    font-size: 1.1rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -296,13 +297,13 @@ import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '..
     }
 
     .collections-grid {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
     }
 
     .images-grid {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
     }
   }
 

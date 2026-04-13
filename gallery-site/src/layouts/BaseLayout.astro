@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title,
-  description = 'Legacy Gnome Gallery — rendered output images and videos from legacy visualization research.',
+  description = 'Legacy Encoder Visualizations — rendered output images and videos from legacy visualization research.',
 } = Astro.props;
 ---
 
@@ -45,7 +45,7 @@ const {
     <header class="site-header">
       <div class="header-inner">
         <a href="/" class="site-title">
-          <span class="title-accent">Legacy</span> Gnome Gallery
+          <span class="title-accent">Legacy</span> Encoder Visualizations
         </a>
         <nav aria-label="Site navigation">
           <a href="/">Home</a>
@@ -58,7 +58,7 @@ const {
     </main>
 
     <footer class="site-footer">
-      <p>Legacy Gnome Gallery — research visualization archive</p>
+      <p>Legacy Encoder Visualizations — research visualization archive</p>
     </footer>
 
     <!-- Lightbox -->
@@ -109,6 +109,7 @@ const {
 
         let images = [];
         let current = 0;
+        let lightboxOpen = false;
 
         function getImages() {
           images = Array.from(document.querySelectorAll('[data-lightbox]'));
@@ -135,7 +136,6 @@ const {
           const trigger = images[current];
           const src = getTriggerSrc(trigger);
 
-          lbImg.src = '';          // clear first so browser re-fetches even for same src
           lbImg.src = src;
           lbImg.alt = getTriggerCaption(trigger);
 
@@ -148,17 +148,44 @@ const {
 
           lbPrev.hidden = images.length <= 1;
           lbNext.hidden = images.length <= 1;
+
+          // Push a history entry so the back button closes the lightbox
+          if (!lightboxOpen) {
+            history.pushState({ lightbox: true }, '');
+            lightboxOpen = true;
+          }
+
           lb.removeAttribute('hidden');
           document.body.style.overflow = 'hidden';
           lbClose.focus();
         }
 
-        function close() {
+        // closeUI tears down the lightbox UI without touching history
+        function closeUI() {
+          lightboxOpen = false;
           lb.setAttribute('hidden', '');
           lbImg.src = '';           // stop GIF playback and free memory when closed
           document.body.style.overflow = '';
           if (images[current]) images[current].focus();
         }
+
+        // close is called by buttons/keyboard — closes UI immediately without any
+        // navigation (avoids re-fetching page assets), then neutralizes the pushed
+        // history entry via replaceState so the back button still goes to the prior page
+        function close() {
+          const hadLightboxState = history.state && history.state.lightbox;
+          closeUI();
+          if (hadLightboxState) {
+            history.replaceState(null, '');
+          }
+        }
+
+        // Back button: popstate fires — just close the UI, history already moved back
+        window.addEventListener('popstate', function () {
+          if (!lb.hasAttribute('hidden')) {
+            closeUI();
+          }
+        });
 
         function showPrev() {
           open((current - 1 + images.length) % images.length);

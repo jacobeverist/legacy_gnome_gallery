@@ -39,7 +39,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 20px;
   scroll-behavior: smooth;
 }
 
@@ -155,18 +155,18 @@ a:hover {
 }
 
 #lightbox-info {
-  margin-top: 0.875rem;
+  margin-top: 1.1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   width: 100%;
   max-width: 100%;
 }
 
 #lightbox-description {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-body, sans-serif);
   text-align: center;
   max-width: 100%;
@@ -178,10 +178,10 @@ a:hover {
 #lightbox-github {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.25rem;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.75rem;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--accent, #2dd4a8);
   border: 1px solid rgba(45, 212, 168, 0.3);

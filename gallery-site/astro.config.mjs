@@ -6,4 +6,27 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://legacy-gnome-gallery.pages.dev',
   integrations: [sitemap()],
+  devToolbar: { enabled: false },
+  vite: {
+    plugins: [
+      {
+        name: 'media-cache-headers',
+        configureServer(server) {
+          // During dev, serve media assets with a 1-hour cache so that
+          // history.pushState (lightbox open) doesn't trigger re-validation.
+          server.middlewares.use((req, res, next) => {
+            const url = req.url ?? '';
+            if (
+              url.startsWith('/illustrations/') ||
+              url.startsWith('/videos/') ||
+              url.startsWith('/thumbnails/')
+            ) {
+              res.setHeader('Cache-Control', 'public, max-age=3600');
+            }
+            next();
+          });
+        },
+      },
+    ],
+  },
 });
