@@ -1,389 +1,394 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { collections, standaloneAnimations, videoGifs, gifToThumbnail } from '../data/collections';
+import {collections, standaloneAnimations, videoGifs, gifToThumbnail} from '../data/collections';
 ---
 
 <BaseLayout title="Legacy Encoder Visualizations">
-  <div class="page-wrapper">
+    <div class="page-wrapper">
 
-    <!-- Hero -->
-    <section class="hero">
-      <h1>Legacy Encoder Visualizations</h1>
-      <p class="hero-subtitle">
-        Encoder parameter evaluation, 2D hypergrid experiments, hexagonal grid cells, and similarity heatmaps and curves.
-      </p>
-      <div class="hero-divider"></div>
-    </section>
+        <!-- Hero -->
+        <section class="hero">
+            <h1>Legacy Encoder Visualizations</h1>
+            <p class="hero-subtitle">
+                Samples from my research
+                <a href="https://github.com/jacobeverist/legacy_gnome_gallery">visualization archive</a>, including
+                encoder parameter evaluation, 2D hypergrid experiments, hexagonal grid cells, and similarity heatmaps
+                and curves.
+            <div class="hero-divider"></div>
+        </section>
 
-    <!-- Collections -->
-    <section class="section">
-      <h2 class="section-title">Collections</h2>
-      <p class="section-subtitle">{collections.length} visualization series</p>
-      <div class="collections-grid">
-        {collections.map((col) => (
-          <a href={`/collection/${col.slug}`} class="collection-card">
-            <div class="card-thumb">
-              <img
-                src={col.thumbnail}
-                alt={col.name}
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="card-overlay"></div>
+        <!-- Collections -->
+        <section class="section">
+            <h2 class="section-title">Collections</h2>
+            <p class="section-subtitle">{collections.length} visualization series</p>
+            <div class="collections-grid">
+                {collections.map((col) => (
+                        <a href={`/collection/${col.slug}`} class="collection-card">
+                            <div class="card-thumb">
+                                <img
+                                        src={col.thumbnail}
+                                        alt={col.name}
+                                        loading="lazy"
+                                        decoding="async"
+                                />
+                                <div class="card-overlay"></div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">{col.name}</h3>
+                                <span class="card-meta">{col.items.length}
+                                    item{col.items.length !== 1 ? 's' : ''}</span>
+                            </div>
+                        </a>
+                ))}
             </div>
-            <div class="card-body">
-              <h3 class="card-title">{col.name}</h3>
-              <span class="card-meta">{col.items.length} item{col.items.length !== 1 ? 's' : ''}</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+        </section>
 
-    <!-- Animations -->
-    <section class="section">
-      <h2 class="section-title">Animations</h2>
-      <p class="section-subtitle">{standaloneAnimations.length + videoGifs.length} animated GIFs</p>
-      <div class="images-grid">
-        {standaloneAnimations.map((anim) => (
-          <div
-            class="image-card anim-card"
-            data-lightbox
-            data-src={anim.gif}
-            data-caption={anim.name}
-            role="button"
-            tabindex="0"
-            aria-label={`View animation: ${anim.name}`}
-          >
-            <div class="anim-thumb-wrap">
-              <img
-                src={gifToThumbnail(anim.gif)}
-                alt={anim.name}
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="play-overlay">
-                <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/>
-                  <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="currentColor"/>
-                </svg>
-              </div>
+        <!-- Animations -->
+        <section class="section">
+            <h2 class="section-title">Animations</h2>
+            <p class="section-subtitle">{standaloneAnimations.length + videoGifs.length} animated GIFs</p>
+            <div class="images-grid">
+                {standaloneAnimations.map((anim) => (
+                        <div
+                                class="image-card anim-card"
+                                data-lightbox
+                                data-src={anim.gif}
+                                data-caption={anim.name}
+                                role="button"
+                                tabindex="0"
+                                aria-label={`View animation: ${anim.name}`}
+                        >
+                            <div class="anim-thumb-wrap">
+                                <img
+                                        src={gifToThumbnail(anim.gif)}
+                                        alt={anim.name}
+                                        loading="lazy"
+                                        decoding="async"
+                                />
+                                <div class="play-overlay">
+                                    <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5"
+                                                fill="rgba(0,0,0,0.45)"/>
+                                        <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="image-caption">{anim.name}</p>
+                        </div>
+                ))}
+                {videoGifs.map((v) => {
+                    const label = v.filename.replace(/\.gif$/, '').replace(/_/g, ' ');
+                    return (
+                            <div
+                                    class="image-card anim-card"
+                                    data-lightbox
+                                    data-src={v.path}
+                                    data-caption={label}
+                                    role="button"
+                                    tabindex="0"
+                                    aria-label={`View animation: ${label}`}
+                            >
+                                <div class="anim-thumb-wrap">
+                                    <img
+                                            src={gifToThumbnail(v.path)}
+                                            alt={label}
+                                            loading="lazy"
+                                            decoding="async"
+                                    />
+                                    <div class="play-overlay">
+                                        <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5"
+                                                    fill="rgba(0,0,0,0.45)"/>
+                                            <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="image-caption">{label}</p>
+                            </div>
+                    );
+                })}
             </div>
-            <p class="image-caption">{anim.name}</p>
-          </div>
-        ))}
-        {videoGifs.map((v) => {
-          const label = v.filename.replace(/\.gif$/, '').replace(/_/g, ' ');
-          return (
-            <div
-              class="image-card anim-card"
-              data-lightbox
-              data-src={v.path}
-              data-caption={label}
-              role="button"
-              tabindex="0"
-              aria-label={`View animation: ${label}`}
-            >
-              <div class="anim-thumb-wrap">
-                <img
-                  src={gifToThumbnail(v.path)}
-                  alt={label}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div class="play-overlay">
-                  <svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/>
-                    <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="currentColor"/>
-                  </svg>
-                </div>
-              </div>
-              <p class="image-caption">{label}</p>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+        </section>
 
-  </div>
+    </div>
 </BaseLayout>
 
 <style>
-  .page-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
-  }
-
-  /* ─── Hero ─────────────────────────────────────────────────────────────────── */
-  .hero {
-    padding: 4rem 0 2rem;
-    position: relative;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -100px;
-    right: -200px;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-    opacity: 0.04;
-    pointer-events: none;
-  }
-
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 7vw, 5rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    margin-bottom: 1rem;
-  }
-
-  .hero-subtitle {
-    max-width: 600px;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    line-height: 1.7;
-  }
-
-  .hero-divider {
-    height: 1px;
-    background: linear-gradient(to right, var(--accent), var(--accent-secondary), transparent);
-    opacity: 0.4;
-    margin-top: 3rem;
-  }
-
-  /* ─── Sections ─────────────────────────────────────────────────────────────── */
-  .section {
-    margin-top: var(--space-lg);
-  }
-
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-
-  .section-subtitle {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-  }
-
-  /* ─── Collections Grid ─────────────────────────────────────────────────────── */
-  .collections-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .collection-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition-fast);
-  }
-
-  .collection-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(45, 212, 168, 0.12);
-    border-color: rgba(45, 212, 168, 0.3);
-  }
-
-  .card-thumb {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: var(--bg-elevated);
-  }
-
-  .card-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition);
-  }
-
-  .collection-card:hover .card-thumb img {
-    transform: scale(1.05);
-  }
-
-  .card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 50%, rgba(10, 15, 15, 0.6) 100%);
-    pointer-events: none;
-  }
-
-  .card-body {
-    padding: 1.1rem 1.4rem 1.4rem;
-  }
-
-  .card-title {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.3rem;
-    line-height: 1.35;
-  }
-
-  .card-meta {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  /* ─── Standalone Images + Animations Grid ──────────────────────────────────── */
-  .images-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .image-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    transition: transform var(--transition), box-shadow var(--transition);
-  }
-
-  .image-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  .image-card img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: top;
-    background: var(--bg-elevated);
-  }
-
-  .image-caption {
-    padding: 1.1rem 1.4rem 1.4rem;
-    font-size: 1.1rem;
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  @media (max-width: 640px) {
     .page-wrapper {
-      padding: 0 1rem 3rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem 4rem;
     }
 
+    /* ─── Hero ─────────────────────────────────────────────────────────────────── */
+    .hero {
+        padding: 4rem 0 2rem;
+        position: relative;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        right: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+        opacity: 0.04;
+        pointer-events: none;
+    }
+
+    .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        max-width: 900px;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+
+    .hero-divider {
+        height: 1px;
+        background: linear-gradient(to right, var(--accent), var(--accent-secondary), transparent);
+        opacity: 0.4;
+        margin-top: 3rem;
+    }
+
+    /* ─── Sections ─────────────────────────────────────────────────────────────── */
+    .section {
+        margin-top: var(--space-lg);
+    }
+
+    .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .section-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    /* ─── Collections Grid ─────────────────────────────────────────────────────── */
     .collections-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
     }
 
+    .collection-card {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition-fast);
+    }
+
+    .collection-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(45, 212, 168, 0.12);
+        border-color: rgba(45, 212, 168, 0.3);
+    }
+
+    .card-thumb {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: var(--bg-elevated);
+    }
+
+    .card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--transition);
+    }
+
+    .collection-card:hover .card-thumb img {
+        transform: scale(1.05);
+    }
+
+    .card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 50%, rgba(10, 15, 15, 0.6) 100%);
+        pointer-events: none;
+    }
+
+    .card-body {
+        padding: 1.1rem 1.4rem 1.4rem;
+    }
+
+    .card-title {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.3rem;
+        line-height: 1.35;
+    }
+
+    .card-meta {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* ─── Standalone Images + Animations Grid ──────────────────────────────────── */
     .images-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
     }
-  }
 
-  /* ─── Animation thumbnail cards ─────────────────────────────────────────────── */
-  .anim-card {
-    cursor: pointer;
-  }
+    .image-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        transition: transform var(--transition), box-shadow var(--transition);
+    }
 
-  .anim-card:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+    .image-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
 
-  .anim-thumb-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: var(--bg-elevated);
-  }
+    .image-card img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        object-position: top;
+        background: var(--bg-elevated);
+    }
 
-  .anim-thumb-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-    transition: transform var(--transition);
-  }
+    .image-caption {
+        padding: 1.1rem 1.4rem 1.4rem;
+        font-size: 1.1rem;
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-  .anim-card:hover .anim-thumb-wrap img {
-    transform: scale(1.05);
-  }
+    @media (max-width: 640px) {
+        .page-wrapper {
+            padding: 0 1rem 3rem;
+        }
 
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.85;
-    transition: opacity var(--transition-fast);
-  }
+        .collections-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
 
-  .anim-card:hover .play-overlay {
-    opacity: 1;
-  }
+        .images-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+    }
 
-  .play-icon {
-    width: 48px;
-    height: 48px;
-    color: var(--accent);
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
-    transition: transform var(--transition-fast);
-  }
+    /* ─── Animation thumbnail cards ─────────────────────────────────────────────── */
+    .anim-card {
+        cursor: pointer;
+    }
 
-  .anim-card:hover .play-icon {
-    transform: scale(1.12);
-  }
+    .anim-card:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    .anim-thumb-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: var(--bg-elevated);
+    }
+
+    .anim-thumb-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        transition: transform var(--transition);
+    }
+
+    .anim-card:hover .anim-thumb-wrap img {
+        transform: scale(1.05);
+    }
+
+    .play-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.85;
+        transition: opacity var(--transition-fast);
+    }
+
+    .anim-card:hover .play-overlay {
+        opacity: 1;
+    }
+
+    .play-icon {
+        width: 48px;
+        height: 48px;
+        color: var(--accent);
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+        transition: transform var(--transition-fast);
+    }
+
+    .anim-card:hover .play-icon {
+        transform: scale(1.12);
+    }
 </style>
 
 <script>
-  // IntersectionObserver: swap data-src → src on PNG image cards as they enter viewport.
-  // GIF anim-cards intentionally have no <img> so nothing to observe there.
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const img = entry.target as HTMLImageElement;
-        const lazySrc = img.dataset.lazySrc;
-        if (lazySrc) {
-          img.src = lazySrc;
-          delete img.dataset.lazySrc;
-        }
-        observer.unobserve(img);
-      });
-    },
-    { rootMargin: '200px' }
-  );
+    // IntersectionObserver: swap data-src → src on PNG image cards as they enter viewport.
+    // GIF anim-cards intentionally have no <img> so nothing to observe there.
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const img = entry.target as HTMLImageElement;
+                const lazySrc = img.dataset.lazySrc;
+                if (lazySrc) {
+                    img.src = lazySrc;
+                    delete img.dataset.lazySrc;
+                }
+                observer.unobserve(img);
+            });
+        },
+        {rootMargin: '200px'}
+    );
 
-  document.querySelectorAll<HTMLImageElement>('img[data-lazy-src]').forEach((img) => {
-    observer.observe(img);
-  });
+    document.querySelectorAll<HTMLImageElement>('img[data-lazy-src]').forEach((img) => {
+        observer.observe(img);
+    });
 </script>
