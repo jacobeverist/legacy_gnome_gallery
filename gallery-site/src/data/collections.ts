@@ -69,10 +69,36 @@ export interface VideoGif {
   path: string;  // /videos/<filename>
 }
 
+/**
+ * Earlier revisions and exact duplicates to suppress.
+ * For each series only the latest version is shown.
+ */
+const EXCLUDED_VIDEO_GIFS = new Set([
+  // grid_2D_0_90 / 0.66_1.33 periods_8_bins — keep v5
+  'grid_2D_0_90_angles_0.66_1.33_periods_8_bins.gif',
+  'grid_2D_0_90_angles_0.66_1.33_periods_8_bins_v2.gif',
+  'grid_2D_0_90_angles_0.66_1.33_periods_8_bins_v3.gif',
+  'grid_2D_0_90_angles_0.66_1.33_periods_8_bins_v4.gif',
+  // grid_2D_0_90 / 1.0 periods_8_bins — keep v1
+  'grid_2D_0_90_angles_1.0_periods_8_bins.gif',
+  // grid_2D_0_90 / 1 period, 4 bins — keep the v1 with decimal naming
+  'grid_2D_0_90_angles_1_periods_4_bins.gif',
+  // hypergrid_lemniscate faded series — keep _5
+  'hypergrid_lemniscate_faded_periodic_visual_1.gif',
+  'hypergrid_lemniscate_faded_periodic_visual_2.gif',
+  'hypergrid_lemniscate_faded_periodic_visual_3.gif',
+  'hypergrid_lemniscate_faded_periodic_visual_4.gif',
+  // showbits color-coded unit_periods — keep _2
+  'hypergrid_showbits_color_coded_unit_periods_1.gif',
+  // duplicates of the subdirectory standalone animations
+  'overlapping_3_2D_grids.gif',
+  'overlapping_3_random_2D_grids.gif',
+]);
+
 /** All GIFs in the top-level videos/ directory, scanned at build time. */
 export const videoGifs: VideoGif[] = fs
   .readdirSync(VIDEOS_DIR)
-  .filter((f) => f.toLowerCase().endsWith('.gif'))
+  .filter((f) => f.toLowerCase().endsWith('.gif') && !EXCLUDED_VIDEO_GIFS.has(f))
   .sort()
   .map((f) => ({ filename: f, path: `/videos/${f}` }));
 
