@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Page Not Found | Legacy Gnome Gallery">
+  <div class="not-found">
+    <p class="code">404</p>
+    <h1>Page not found</h1>
+    <p class="msg">The visualization you're looking for doesn't exist here.</p>
+    <a href="/" class="btn-home">← Back to Gallery</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 8rem 2rem;
+    text-align: center;
+  }
+
+  .code {
+    font-family: var(--font-display);
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .msg {
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .btn-home {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.75rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: var(--radius-button);
+    text-decoration: none;
+    border-bottom: none;
+    transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .btn-home:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(45, 212, 168, 0.2);
+    color: var(--bg);
+  }
+</style>

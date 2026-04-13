@@ -1,0 +1,276 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Legacy Gnome Gallery — rendered output images and videos from legacy visualization research.',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={Astro.url.href} />
+
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <title>{title}</title>
+
+    <!-- Google Fonts: Space Grotesk + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="/" class="site-title">
+          <span class="title-accent">Legacy</span> Gnome Gallery
+        </a>
+        <nav aria-label="Site navigation">
+          <a href="/">Home</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>Legacy Gnome Gallery — research visualization archive</p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+      <button id="lightbox-close" aria-label="Close image viewer">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3 3l14 14M17 3L3 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button id="lightbox-prev" aria-label="Previous image">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M13 3L6 10l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button id="lightbox-next" aria-label="Next image">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M7 3l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="lightbox-backdrop"></div>
+      <div id="lightbox-content">
+        <img id="lightbox-img" src="" alt="" />
+        <div id="lightbox-info">
+          <p id="lightbox-description"></p>
+          <a id="lightbox-github" href="" target="_blank" rel="noopener noreferrer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span id="lightbox-filename"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function () {
+        const GITHUB_BASE = 'https://github.com/jacobeverist/legacy_gnome_gallery/blob/main';
+
+        const lb           = document.getElementById('lightbox');
+        const lbImg        = document.getElementById('lightbox-img');
+        const lbDesc       = document.getElementById('lightbox-description');
+        const lbGithub     = document.getElementById('lightbox-github');
+        const lbFilename   = document.getElementById('lightbox-filename');
+        const lbClose      = document.getElementById('lightbox-close');
+        const lbBackdrop   = document.getElementById('lightbox-backdrop');
+        const lbPrev       = document.getElementById('lightbox-prev');
+        const lbNext       = document.getElementById('lightbox-next');
+
+        let images = [];
+        let current = 0;
+
+        function getImages() {
+          images = Array.from(document.querySelectorAll('[data-lightbox]'));
+        }
+
+        function srcToGithubUrl(src) {
+          // src is like /illustrations/foo/bar.png — strip leading slash for the path
+          const repoPath = src.startsWith('/') ? src.slice(1) : src;
+          return GITHUB_BASE + '/' + repoPath;
+        }
+
+        // Works for both <img data-lightbox> and <div data-lightbox data-src="...">
+        function getTriggerSrc(el) {
+          return el.dataset.src || el.dataset.full || el.getAttribute('src') || '';
+        }
+
+        function getTriggerCaption(el) {
+          return el.dataset.caption || el.getAttribute('alt') || '';
+        }
+
+        function open(index) {
+          getImages();
+          current = index;
+          const trigger = images[current];
+          const src = getTriggerSrc(trigger);
+
+          lbImg.src = '';          // clear first so browser re-fetches even for same src
+          lbImg.src = src;
+          lbImg.alt = getTriggerCaption(trigger);
+
+          lbDesc.textContent = getTriggerCaption(trigger);
+
+          const filename = src.split('/').pop() || '';
+          lbFilename.textContent = filename;
+
+          lbGithub.href = srcToGithubUrl(src);
+
+          lbPrev.hidden = images.length <= 1;
+          lbNext.hidden = images.length <= 1;
+          lb.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+          lbClose.focus();
+        }
+
+        function close() {
+          lb.setAttribute('hidden', '');
+          lbImg.src = '';           // stop GIF playback and free memory when closed
+          document.body.style.overflow = '';
+          if (images[current]) images[current].focus();
+        }
+
+        function showPrev() {
+          open((current - 1 + images.length) % images.length);
+        }
+
+        function showNext() {
+          open((current + 1) % images.length);
+        }
+
+        function handleTrigger(e) {
+          const trigger = e.target.closest('[data-lightbox]');
+          if (!trigger) return;
+          if (trigger.tagName === 'A') return;  // let collection card links navigate normally
+          getImages();
+          const idx = images.indexOf(trigger);
+          open(idx >= 0 ? idx : 0);
+        }
+
+        document.addEventListener('click', handleTrigger);
+
+        // Keyboard activation for role="button" divs
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            const trigger = document.activeElement && document.activeElement.closest('[data-lightbox]');
+            if (trigger && trigger.tagName !== 'A' && !lb.hasAttribute('hidden') === false) {
+              e.preventDefault();
+              handleTrigger({ target: trigger });
+            }
+          }
+        });
+
+        lbClose.addEventListener('click', close);
+        lbBackdrop.addEventListener('click', close);
+        lbPrev.addEventListener('click', showPrev);
+        lbNext.addEventListener('click', showNext);
+
+        document.addEventListener('keydown', function (e) {
+          if (lb.hasAttribute('hidden')) return;
+          if (e.key === 'Escape')      close();
+          if (e.key === 'ArrowLeft')   showPrev();
+          if (e.key === 'ArrowRight')  showNext();
+        });
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* ─── Header ──────────────────────────────────────────────────────────────── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 15, 15, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .site-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    border-bottom: none;
+  }
+
+  .site-title:hover {
+    color: var(--text);
+  }
+
+  .title-accent {
+    color: var(--accent);
+  }
+
+  .site-header nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .site-header nav a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    border-bottom: none;
+  }
+
+  .site-header nav a:hover {
+    color: var(--accent);
+  }
+
+  /* ─── Footer ──────────────────────────────────────────────────────────────── */
+  .site-footer {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg) 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+</style>

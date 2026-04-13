@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { collections } from '../../data/collections';
+import type { Collection } from '../../data/collections';
+
+export function getStaticPaths() {
+  return collections.map((col) => ({
+    params: { slug: col.slug },
+    props: { collection: col },
+  }));
+}
+
+interface Props {
+  collection: Collection;
+}
+
+const { collection } = Astro.props;
+
+const gifs = collection.items.filter((i) => i.type === 'gif');
+const mkvs = collection.items.filter((i) => i.type === 'mkv');
+const pngs = collection.items.filter((i) => i.type === 'png');
+---
+
+<BaseLayout
+  title={`${collection.name} — Legacy Gnome Gallery`}
+  description={`${collection.name}: ${collection.items.length} media items`}
+>
+  <div class="page-wrapper">
+
+    <!-- Breadcrumb + back -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">← All Collections</a>
+    </nav>
+
+    <!-- Page header -->
+    <header class="col-header">
+      <h1>{collection.name}</h1>
+      <div class="col-stats">
+        {gifs.length > 0 && <span class="stat">{gifs.length} GIF{gifs.length !== 1 ? 's' : ''}</span>}
+        {mkvs.length > 0 && <span class="stat">{mkvs.length} Video{mkvs.length !== 1 ? 's' : ''}</span>}
+        {pngs.length > 0 && <span class="stat">{pngs.length} PNG{pngs.length !== 1 ? 's' : ''}</span>}
+      </div>
+      <div class="col-divider"></div>
+    </header>
+
+    <!-- GIFs -->
+    {gifs.length > 0 && (
+      <section class="media-section">
+        <h2 class="media-section-label">Animations</h2>
+        <div class="media-grid media-grid--large">
+          {gifs.map((item) => (
+            <figure class="media-item">
+              <img
+                src={item.path}
+                alt={item.filename.replace('.gif', '').replace(/_/g, ' ')}
+                data-lightbox
+                data-caption={item.filename}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{item.filename}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Videos -->
+    {mkvs.length > 0 && (
+      <section class="media-section">
+        <h2 class="media-section-label">Videos</h2>
+        <div class="media-grid media-grid--large">
+          {mkvs.map((item) => (
+            <figure class="media-item">
+              <video
+                controls
+                preload="metadata"
+                aria-label={item.filename.replace('.mkv', '').replace(/_/g, ' ')}
+              >
+                <source src={item.path} type="video/x-matroska" />
+                <source src={item.path} type="video/mkv" />
+                Your browser does not support MKV video playback.
+              </video>
+              <figcaption>{item.filename}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- PNGs -->
+    {pngs.length > 0 && (
+      <section class="media-section">
+        <h2 class="media-section-label">Images</h2>
+        <div class="media-grid media-grid--small">
+          {pngs.map((item) => (
+            <figure class="media-item">
+              <img
+                src={item.path}
+                alt={item.filename.replace('.png', '').replace(/_/g, ' ')}
+                data-lightbox
+                data-caption={item.filename}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{item.filename}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 2rem 5rem;
+  }
+
+  /* ─── Breadcrumb ───────────────────────────────────────────────────────────── */
+  .breadcrumb {
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb a {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    border-bottom: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent);
+  }
+
+  /* ─── Collection header ────────────────────────────────────────────────────── */
+  .col-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .col-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 0.75rem;
+  }
+
+  .col-stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-button);
+    padding: 0.2rem 0.75rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  .col-divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    opacity: 0.3;
+    margin-top: 1.5rem;
+  }
+
+  /* ─── Media sections ───────────────────────────────────────────────────────── */
+  .media-section {
+    margin-top: var(--space-lg);
+  }
+
+  .media-section-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ─── Media grids ──────────────────────────────────────────────────────────── */
+  .media-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .media-grid--large {
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  }
+
+  .media-grid--small {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  /* ─── Media items ──────────────────────────────────────────────────────────── */
+  .media-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition-fast);
+  }
+
+  .media-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(45, 212, 168, 0.1);
+    border-color: rgba(45, 212, 168, 0.25);
+  }
+
+  .media-item img,
+  .media-item video {
+    width: 100%;
+    display: block;
+    background: var(--bg-elevated);
+  }
+
+  .media-item img {
+    aspect-ratio: unset;
+    max-height: 600px;
+    object-fit: contain;
+  }
+
+  .media-item video {
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+  }
+
+  .media-item figcaption {
+    padding: 0.5rem 0.875rem 0.625rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: "Fira Code", monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-top: 1px solid var(--border-light);
+  }
+
+  @media (max-width: 768px) {
+    .page-wrapper {
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    .media-grid--large {
+      grid-template-columns: 1fr;
+    }
+
+    .media-grid--small {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+  }
+</style>
