@@ -15,12 +15,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
                 <a href="https://github.com/jacobeverist/legacy_gnome_gallery">visualization archive</a>, including
                 encoder parameter evaluation, 2D hypergrid experiments, hexagonal grid cells, and similarity heatmaps
                 and curves.
+            </p>
+            <p><br></p>
+            <p class="hero-subtitle">
+                Most of these assets were originally generated with my <a href="https://github.com/jacobeverist/legacy_gnome_visuals" target="_blank" rel="noopener noreferrer">historical visualization code</a>.
+            </p>
+            <nav class="hero-nav" aria-label="Jump to section">
+                <a href="#collections" class="hero-nav-link">Image Collections</a>
+                <a href="#animations" class="hero-nav-link">Animations</a>
+            </nav>
             <div class="hero-divider"></div>
         </section>
 
-        <!-- Collections -->
-        <section class="section">
-            <h2 class="section-title">Collections</h2>
+        <!-- Image Collections -->
+        <section class="section" id="collections">
+            <h2 class="section-title">Image Collections</h2>
             <p class="section-subtitle">{collections.length} visualization series</p>
             <div class="collections-grid">
                 {collections.map((col) => (
@@ -45,7 +54,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </section>
 
         <!-- Animations -->
-        <section class="section">
+        <section class="section" id="animations">
             <h2 class="section-title">Animations</h2>
             <p class="section-subtitle">{standaloneAnimations.length + videoGifs.length} animated GIFs</p>
             <div class="images-grid">
@@ -160,7 +169,41 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         line-height: 1.7;
     }
 
-    .hero-divider {
+    .hero-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid rgba(45, 212, 168, 0.35);
+    border-radius: var(--radius-button);
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .hero-nav-link:hover {
+    background: rgba(45, 212, 168, 0.1);
+    border-color: rgba(45, 212, 168, 0.6);
+    color: var(--accent);
+  }
+
+  .hero-description {
+    max-width: 600px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-top: 0.75rem;
+  }
+
+  .hero-divider {
         height: 1px;
         background: linear-gradient(to right, var(--accent), var(--accent-secondary), transparent);
         opacity: 0.4;
@@ -187,7 +230,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         margin-bottom: 2rem;
     }
 
-    /* ─── Collections Grid ─────────────────────────────────────────────────────── */
+    /* ─── Image Collections Grid ─────────────────────────────────────────────────────── */
     .collections-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
