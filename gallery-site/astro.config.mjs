@@ -4,7 +4,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://legacy-gnome-gallery.pages.dev',
+  site: 'https://jacobeverist.github.io',
+  base: '/legacy_gnome_gallery',
   integrations: [sitemap()],
   devToolbar: { enabled: false },
   vite: {

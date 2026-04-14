@@ -5,6 +5,10 @@ import path from 'path';
 const ILLUS_DIR  = path.resolve(process.cwd(), '../illustrations');
 const VIDEOS_DIR = path.resolve(process.cwd(), '../videos');
 
+// Strip trailing slash so we can safely do `${BASE}/path`
+// BASE_URL is '/' in dev without a base, or '/legacy_gnome_gallery/' when base is set.
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export interface MediaItem {
   type: 'gif' | 'mkv' | 'png';
   filename: string;
@@ -34,11 +38,11 @@ export interface StandaloneAnimation {
 export const topLevelImages: TopLevelImage[] = [];
 
 function illustrationsPath(rel: string) {
-  return `/illustrations/${rel}`;
+  return `${BASE}/illustrations/${rel}`;
 }
 
 function videosPath(rel: string) {
-  return `/videos/${rel}`;
+  return `${BASE}/videos/${rel}`;
 }
 
 /**
@@ -48,7 +52,10 @@ function videosPath(rel: string) {
  *      /videos/foo.gif             →  /thumbnails/videos/foo.jpg
  */
 export function gifToThumbnail(gifPublicPath: string): string {
-  return '/thumbnails' + gifPublicPath.replace(/\.gif$/i, '.jpg');
+  // gifPublicPath already includes BASE (e.g. /legacy_gnome_gallery/videos/foo.gif)
+  // thumbnail lives at BASE/thumbnails/<path-without-base>.jpg
+  const pathWithoutBase = gifPublicPath.slice(BASE.length);
+  return `${BASE}/thumbnails${pathWithoutBase.replace(/\.gif$/i, '.jpg')}`;
 }
 
 function makeItems(
@@ -100,7 +107,7 @@ export const videoGifs: VideoGif[] = fs
   .readdirSync(VIDEOS_DIR)
   .filter((f) => f.toLowerCase().endsWith('.gif') && !EXCLUDED_VIDEO_GIFS.has(f))
   .sort()
-  .map((f) => ({ filename: f, path: `/videos/${f}` }));
+  .map((f) => ({ filename: f, path: `${BASE}/videos/${f}` }));
 
 /** Recursively collect all PNGs under a directory, returning paths relative to ILLUS_DIR. */
 function scanPngs(absDir: string): MediaItem[] {
@@ -112,7 +119,7 @@ function scanPngs(absDir: string): MediaItem[] {
         walk(full);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.png')) {
         const rel = path.relative(ILLUS_DIR, full).replace(/\\/g, '/');
-        items.push({ type: 'png', filename: entry.name, path: `/illustrations/${rel}` });
+        items.push({ type: 'png', filename: entry.name, path: `${BASE}/illustrations/${rel}` });
       }
     }
   }
