@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {collections, standaloneAnimations, videoGifs, gifToThumbnail} from '../data/collections';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Legacy Encoder Visualizations">
@@ -23,7 +24,7 @@ import {collections, standaloneAnimations, videoGifs, gifToThumbnail} from '../d
             <p class="section-subtitle">{collections.length} visualization series</p>
             <div class="collections-grid">
                 {collections.map((col) => (
-                        <a href={`${import.meta.env.BASE_URL}collection/${col.slug}`} class="collection-card">
+                        <a href={`${base}/collection/${col.slug}`} class="collection-card">
                             <div class="card-thumb">
                                 <img
                                         src={col.thumbnail}

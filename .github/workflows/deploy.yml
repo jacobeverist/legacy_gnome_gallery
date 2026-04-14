@@ -44,6 +44,10 @@ jobs:
         working-directory: gallery-site
         run: npm run build
 
+      - name: Trim unreferenced media from dist
+        working-directory: gallery-site
+        run: SITE_BASE=/legacy_gnome_gallery node scripts/trim-dist.mjs
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
